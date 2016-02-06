@@ -30,7 +30,7 @@ This method returns a cadvisor/info.MachineInfo struct with all the fields fille
 })
 ```
 
-You can see the full specification of the [MachineInfo struct in the source](../info/v1/machine.go#L131)
+You can see the full specification of the [MachineInfo struct in the source](../info/v1/machine.go#L131 "MachineInfo struct")
 
 ### ContainerInfo
 
@@ -40,7 +40,7 @@ Given a container name and a ContainerInfoRequest, will return all information a
 request := info.ContainerInfoRequest{10}
 sInfo, err := client.ContainerInfo("/docker/d9d3eb10179e6f93a...", &request)
 ```
-Returns a [ContainerInfo struct](../info/v1/container.go#L120)
+Returns a [ContainerInfo struct](../info/v1/container.go#L120 "ContainerInfo struct")
 
 ### SubcontainersInfo
 
@@ -51,4 +51,4 @@ request := info.ContainerInfoRequest{10}
 sInfo, err := client.SubcontainersInfo("/docker", &request)
 ```
 
-Returns a [ContainerInfo struct](../info/v1/container.go#L120) with the Subcontainers field populated.
+Returns a [ContainerInfo struct](../info/v1/container.go#L120 "ContainerInfo struct") with the Subcontainers field populated.
