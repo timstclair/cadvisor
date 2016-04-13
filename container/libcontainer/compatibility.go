@@ -182,7 +182,7 @@ const (
 	// Relative path to the libcontainer execdriver directory.
 	libcontainerExecDriverPath = "execdriver/native"
 	// Absolute path of the containerd directory.
-	containerdPath = "/run/containerd"
+	containerdPath = "/var/run/docker/libcontainerd"
 )
 
 // TODO(vmarmol): Deprecate over time as old Dockers are phased out.
