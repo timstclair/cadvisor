@@ -28,8 +28,22 @@ func TestTcpMetricsAreDisabledByDefault(t *testing.T) {
 	assert.True(t, ignoreMetrics.Has(container.NetworkTcpUsageMetrics))
 }
 
-func TestTcpMetricsAreEnabledOnDemand(t *testing.T) {
-	assert.True(t, ignoreMetrics.Has(container.NetworkTcpUsageMetrics))
-	ignoreMetrics.Set("")
-	assert.False(t, ignoreMetrics.Has(container.NetworkTcpUsageMetrics))
+func TestIgnoreMetrics(t *testing.T) {
+	tests := struct {
+		value    string
+		expected []container.MetricKind
+	}{
+		{"", {}},
+		{"disk", {container.DiskUsageMetrics}},
+		{"disk,tcp,memory", {container.DiskUsageMetrics, container.NetworkTcpUsageMetrics, container.MemoryUsageMetrics}},
+	}
+
+	for _, test := range tests {
+		ignoreMetrics.Set(test.value)
+
+		assert.Equal(t, len(test.expected), len(ignoreMetrics.MetricSet))
+		for _, expected := range test.expected {
+			assert.True(t, ignoreMetrics.Has(expected))
+		}
+	}
 }
