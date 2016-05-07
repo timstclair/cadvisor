@@ -27,6 +27,7 @@ import (
 	containerlibcontainer "github.com/google/cadvisor/container/libcontainer"
 	"github.com/google/cadvisor/fs"
 	info "github.com/google/cadvisor/info/v1"
+	"github.com/google/cadvisor/utils"
 
 	docker "github.com/docker/engine-api/client"
 	dockertypes "github.com/docker/engine-api/types"
@@ -131,11 +132,8 @@ func newDockerContainerHandler(
 		Paths: cgroupPaths,
 	}
 
-	rootFs := "/"
-	if !inHostNamespace {
-		rootFs = "/rootfs"
-		storageDir = path.Join(rootFs, storageDir)
-	}
+	rootFs := utils.RootFs(inHostNamespace)
+	storageDir = path.Join(rootFs, storageDir)
 
 	id := ContainerNameToDockerId(name)
 

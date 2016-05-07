@@ -25,6 +25,7 @@ import (
 	"github.com/google/cadvisor/container/docker"
 	"github.com/google/cadvisor/fs"
 	info "github.com/google/cadvisor/info/v1"
+	"github.com/google/cadvisor/utils"
 	"github.com/google/cadvisor/utils/cloudinfo"
 	"github.com/google/cadvisor/utils/machine"
 	"github.com/google/cadvisor/utils/sysfs"
@@ -53,10 +54,7 @@ func getInfoFromFiles(filePaths string) string {
 }
 
 func getMachineInfo(sysFs sysfs.SysFs, fsInfo fs.FsInfo, inHostNamespace bool) (*info.MachineInfo, error) {
-	rootFs := "/"
-	if !inHostNamespace {
-		rootFs = "/rootfs"
-	}
+	rootFs := utils.RootFs(inHostNamespace)
 
 	cpuinfo, err := ioutil.ReadFile(filepath.Join(rootFs, "/proc/cpuinfo"))
 	clockSpeed, err := machine.GetClockSpeed(cpuinfo)

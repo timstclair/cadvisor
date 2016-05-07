@@ -18,7 +18,6 @@ package manager
 import (
 	"flag"
 	"fmt"
-	"os"
 	"path"
 	"strconv"
 	"strings"
@@ -36,6 +35,7 @@ import (
 	"github.com/google/cadvisor/fs"
 	info "github.com/google/cadvisor/info/v1"
 	"github.com/google/cadvisor/info/v2"
+	"github.com/google/cadvisor/utils"
 	"github.com/google/cadvisor/utils/cpuload"
 	"github.com/google/cadvisor/utils/oomparser"
 	"github.com/google/cadvisor/utils/sysfs"
@@ -156,10 +156,7 @@ func New(memoryCache *memory.InMemoryCache, sysfs sysfs.SysFs, maxHousekeepingIn
 
 	// If cAdvisor was started with host's rootfs mounted, assume that its running
 	// in its own namespaces.
-	inHostNamespace := false
-	if _, err := os.Stat("/rootfs/proc"); os.IsNotExist(err) {
-		inHostNamespace = true
-	}
+	inHostNamespace := !utils.FileExists("/rootfs/proc")
 
 	newManager := &manager{
 		containers:               make(map[namespacedContainerName]*containerData),

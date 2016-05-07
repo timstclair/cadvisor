@@ -35,6 +35,7 @@ import (
 	info "github.com/google/cadvisor/info/v1"
 	"github.com/google/cadvisor/info/v2"
 	"github.com/google/cadvisor/summary"
+	"github.com/google/cadvisor/utils"
 	"github.com/google/cadvisor/utils/cpuload"
 
 	units "github.com/docker/go-units"
@@ -159,10 +160,7 @@ func (c *containerData) ReadFile(filepath string, inHostNamespace bool) ([]byte,
 		return nil, err
 	}
 	// TODO(rjnagal): Optimize by just reading container's cgroup.proc file when in host namespace.
-	rootfs := "/"
-	if !inHostNamespace {
-		rootfs = "/rootfs"
-	}
+	rootfs := utils.RootFs(inHostNamespace)
 	for _, pid := range pids {
 		filePath := path.Join(rootfs, "/proc", pid, "/root", filepath)
 		glog.V(3).Infof("Trying path %q", filePath)
@@ -181,7 +179,7 @@ func (c *containerData) getPsOutput(inHostNamespace bool, format string) ([]byte
 	command := "ps"
 	if !inHostNamespace {
 		command = "/usr/sbin/chroot"
-		args = append(args, "/rootfs", "ps")
+		args = append(args, utils.RootFs(inHostNamespace), "ps")
 	}
 	args = append(args, "-e", "-o", format)
 	out, err := exec.Command(command, args...).Output()

@@ -22,6 +22,7 @@ import (
 	"github.com/google/cadvisor/container/libcontainer"
 	"github.com/google/cadvisor/fs"
 	info "github.com/google/cadvisor/info/v1"
+	"github.com/google/cadvisor/utils"
 
 	"github.com/golang/glog"
 )
@@ -50,10 +51,7 @@ func (self *rktFactory) NewContainerHandler(name string, inHostNamespace bool) (
 		return nil, err
 	}
 
-	rootFs := "/"
-	if !inHostNamespace {
-		rootFs = "/rootfs"
-	}
+	rootFs := utils.RootFs(inHostNamespace)
 	return newRktContainerHandler(name, client, self.rktPath, self.cgroupSubsystems, self.machineInfoFactory, self.fsInfo, rootFs, self.ignoreMetrics)
 }
 
